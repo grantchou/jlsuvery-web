@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 const documentSections = [
   {
@@ -12,6 +13,7 @@ const documentSections = [
   {
     title: "常見問題",
     details: ["回覆時效", "窗口資訊", "資料補件方式"],
+    link: { href: "/faq", label: "查看常見問題全文" },
   },
 ];
 
@@ -33,6 +35,16 @@ export default function DocsPage() {
                 <li key={item}>{item}</li>
               ))}
             </ul>
+            {"link" in section && section.link ? (
+              <p className="mt-4">
+                <Link
+                  href={section.link.href}
+                  className="text-sm font-medium text-sky-800 underline-offset-4 hover:underline"
+                >
+                  {section.link.label}
+                </Link>
+              </p>
+            ) : null}
           </article>
         ))}
       </div>
