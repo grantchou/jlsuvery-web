@@ -71,13 +71,18 @@ function normalizeContent(raw: unknown): SiteContent {
 }
 
 export async function getSiteContent(): Promise<SiteContent> {
-  const setting = await db.siteSetting.findUnique({
-    where: { key: SITE_CONTENT_KEY },
-  });
-  if (!setting) {
+  try {
+    const setting = await db.siteSetting.findUnique({
+      where: { key: SITE_CONTENT_KEY },
+    });
+    if (!setting) {
+      return defaultContent;
+    }
+    return normalizeContent(setting.value);
+  } catch (error) {
+    console.error("讀取網站內容失敗，改用預設內容。", error);
     return defaultContent;
   }
-  return normalizeContent(setting.value);
 }
 
 export async function updateSiteContent(content: SiteContent): Promise<SiteContent> {
