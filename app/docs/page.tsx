@@ -15,6 +15,11 @@ const documentSections = [
     details: ["回覆時效", "窗口資訊", "資料補件方式"],
     link: { href: "/faq", label: "查看常見問題全文" },
   },
+  {
+    title: "檔案下載",
+    details: ["公司簡介", "合作流程摘要", "文件範本下載"],
+    link: { href: "/downloads", label: "前往檔案下載頁" },
+  },
 ];
 
 export const metadata: Metadata = {
@@ -26,7 +31,7 @@ export default function DocsPage() {
   return (
     <section className="space-y-6">
       <h1 className="text-3xl font-bold tracking-tight text-slate-900">文件說明</h1>
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {documentSections.map((section) => (
           <article key={section.title} className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
             <h2 className="text-lg font-semibold text-slate-900">{section.title}</h2>

@@ -5,6 +5,7 @@ const navItems = [
   { href: "/about", label: "關於我們" },
   { href: "/services", label: "服務項目" },
   { href: "/docs", label: "文件說明" },
+  { href: "/downloads", label: "檔案下載" },
   { href: "/faq", label: "常見問題" },
   { href: "/contact", label: "聯絡我們" },
 ];
