@@ -103,7 +103,6 @@ export function ContactForm() {
         <textarea
           required
           rows={6}
-          minLength={10}
           value={form.message}
           onChange={(event) => setForm((prev) => ({ ...prev, message: event.target.value }))}
           className="w-full rounded-lg border border-slate-300 px-3 py-2"
