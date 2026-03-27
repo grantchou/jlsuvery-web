@@ -38,7 +38,14 @@ export async function POST(request: Request) {
     const payload = await request.json();
     const parsed = contactSchema.safeParse(payload);
     if (!parsed.success) {
-      return NextResponse.json({ message: "表單欄位驗證失敗" }, { status: 400 });
+      const firstIssue = parsed.error.issues[0];
+      return NextResponse.json(
+        {
+          message: firstIssue?.message ?? "表單欄位驗證失敗",
+          field: firstIssue?.path?.[0] ?? null,
+        },
+        { status: 400 },
+      );
     }
 
     const clientIp = getClientIp(request);

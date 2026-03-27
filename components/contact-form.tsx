@@ -60,6 +60,7 @@ export function ContactForm() {
           <span className="text-sm text-slate-700">姓名</span>
           <input
             required
+            minLength={2}
             value={form.name}
             onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
             className="w-full rounded-lg border border-slate-300 px-3 py-2"
@@ -68,7 +69,9 @@ export function ContactForm() {
         <label className="space-y-2">
           <span className="text-sm text-slate-700">聯絡電話</span>
           <input
+            type="tel"
             required
+            minLength={8}
             value={form.phone}
             onChange={(event) => setForm((prev) => ({ ...prev, phone: event.target.value }))}
             className="w-full rounded-lg border border-slate-300 px-3 py-2"
@@ -89,6 +92,7 @@ export function ContactForm() {
         <span className="text-sm text-slate-700">主旨</span>
         <input
           required
+          minLength={2}
           value={form.subject}
           onChange={(event) => setForm((prev) => ({ ...prev, subject: event.target.value }))}
           className="w-full rounded-lg border border-slate-300 px-3 py-2"
@@ -99,6 +103,7 @@ export function ContactForm() {
         <textarea
           required
           rows={6}
+          minLength={10}
           value={form.message}
           onChange={(event) => setForm((prev) => ({ ...prev, message: event.target.value }))}
           className="w-full rounded-lg border border-slate-300 px-3 py-2"
