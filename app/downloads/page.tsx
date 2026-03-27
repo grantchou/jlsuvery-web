@@ -1,25 +1,16 @@
 import type { Metadata } from "next";
+import { getSiteContent } from "@/lib/site-content";
 
-type DownloadItem = {
-  title: string;
-  description: string;
-  filePath: string;
-};
-
-const downloadItems: DownloadItem[] = [
-  {
-    title: "公司簡介（範例）",
-    description: "提供 JLSUVERY 第一版網站用途的公司簡介範本檔案。",
-    filePath: "/downloads/company-profile-sample.txt",
-  },
-];
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "檔案下載",
   description: "JLSUVERY 文件下載中心，提供公司簡介與相關檔案。",
 };
 
-export default function DownloadsPage() {
+export default async function DownloadsPage() {
+  const content = await getSiteContent();
+
   return (
     <section className="space-y-6">
       <div>
@@ -32,7 +23,7 @@ export default function DownloadsPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        {downloadItems.map((item) => (
+        {content.downloads.map((item) => (
           <article key={item.filePath} className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
             <h2 className="text-lg font-semibold text-slate-900">{item.title}</h2>
             <p className="mt-2 text-slate-700">{item.description}</p>

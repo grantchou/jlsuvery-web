@@ -56,6 +56,14 @@ npm run dev
 - `CONTACT_SENDER_EMAIL`: 寄件來源信箱
 - `RESEND_API_KEY`: Resend API 金鑰（使用 Resend 時）
 - `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS`: SMTP 設定（使用 SMTP 時）
+- `ADMIN_PASSWORD`: 後台登入密碼
+- `ADMIN_SESSION_SECRET`: 後台登入簽章密鑰（建議 32 字元以上）
+
+## 後台使用方式
+
+- 後台登入頁：`/admin/login`
+- 後台管理頁：`/admin`
+- 可編輯內容：首頁主標題、首頁描述、首頁三個重點、下載頁清單
 
 ## 部署建議（jlsuvery.tw）
 
