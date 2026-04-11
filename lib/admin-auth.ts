@@ -3,12 +3,32 @@ import { cookies } from "next/headers";
 
 const ADMIN_COOKIE = "jlsuvery_admin_session";
 
+/** 依實際連線是否為 HTTPS 決定 Cookie 的 Secure，避免 production + http 時瀏覽器拒絕寫入 Session。 */
+export function shouldUseSecureAdminCookie(request: Request): boolean {
+  const forwarded = request.headers.get("x-forwarded-proto");
+  if (forwarded) {
+    const proto = forwarded.split(",")[0]?.trim().toLowerCase();
+    if (proto === "http" || proto === "https") {
+      return proto === "https";
+    }
+  }
+  try {
+    return new URL(request.url).protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 function getAdminPassword(): string {
-  return process.env.ADMIN_PASSWORD ?? "";
+  return (process.env.ADMIN_PASSWORD ?? "").trim();
 }
 
 function getSessionSecret(): string {
-  return process.env.ADMIN_SESSION_SECRET ?? "";
+  return (process.env.ADMIN_SESSION_SECRET ?? "").trim();
+}
+
+export function isAdminEnvConfigured(): boolean {
+  return Boolean(getAdminPassword() && getSessionSecret());
 }
 
 function signSessionPayload(payload: string): string {
@@ -26,10 +46,11 @@ function safeCompare(a: string, b: string): boolean {
 
 export function verifyAdminPassword(password: string): boolean {
   const expected = getAdminPassword();
-  if (!expected || !password) {
+  const candidate = password.trim();
+  if (!expected || !candidate) {
     return false;
   }
-  return safeCompare(password, expected);
+  return safeCompare(candidate, expected);
 }
 
 export function createSessionToken(): string {
@@ -53,7 +74,7 @@ export function isValidSessionToken(token: string): boolean {
 export async function isAdminAuthenticated(): Promise<boolean> {
   const cookieStore = await cookies();
   const token = cookieStore.get(ADMIN_COOKIE)?.value;
-  if (!token || !getSessionSecret()) {
+  if (!token || !isAdminEnvConfigured()) {
     return false;
   }
   return isValidSessionToken(token);

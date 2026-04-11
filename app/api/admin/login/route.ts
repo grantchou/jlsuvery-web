@@ -1,9 +1,15 @@
 import { NextResponse } from "next/server";
-import { createSessionToken, getAdminCookieName, verifyAdminPassword } from "@/lib/admin-auth";
+import {
+  createSessionToken,
+  getAdminCookieName,
+  isAdminEnvConfigured,
+  shouldUseSecureAdminCookie,
+  verifyAdminPassword,
+} from "@/lib/admin-auth";
 
 export async function POST(request: Request) {
   try {
-    if (!process.env.ADMIN_SESSION_SECRET || !process.env.ADMIN_PASSWORD) {
+    if (!isAdminEnvConfigured()) {
       return NextResponse.json({ message: "後台尚未設定環境變數" }, { status: 500 });
     }
 
@@ -15,7 +21,7 @@ export async function POST(request: Request) {
     const response = NextResponse.json({ message: "登入成功" });
     response.cookies.set(getAdminCookieName(), createSessionToken(), {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: shouldUseSecureAdminCookie(request),
       sameSite: "lax",
       path: "/",
       maxAge: 60 * 60 * 12,

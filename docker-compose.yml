@@ -1,0 +1,34 @@
+# 一鍵：PostgreSQL + 網站
+# 使用：在專案根目錄執行 `docker compose up --build`
+# 網址：http://localhost:3000
+# 其他環境變數（寄信、後台）：可建立 `.env.docker` 並取消下面 env_file 註解，或直接用 `docker compose run -e ...`
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: jlsuvery
+    volumes:
+      - jlsuvery_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d jlsuvery"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/jlsuvery?schema=public
+    depends_on:
+      db:
+        condition: service_healthy
+    # env_file:
+    #   - .env.docker
+
+volumes:
+  jlsuvery_pg:

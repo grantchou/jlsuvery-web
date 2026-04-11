@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { getAdminCookieName } from "@/lib/admin-auth";
+import { getAdminCookieName, shouldUseSecureAdminCookie } from "@/lib/admin-auth";
 
-export async function POST() {
+export async function POST(request: Request) {
   const response = NextResponse.json({ message: "已登出" });
   response.cookies.set(getAdminCookieName(), "", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: shouldUseSecureAdminCookie(request),
     sameSite: "lax",
     path: "/",
     maxAge: 0,

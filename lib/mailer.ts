@@ -30,7 +30,7 @@ export async function sendContactMail(payload: ContactMailPayload): Promise<void
     throw new Error("缺少 CONTACT_RECEIVER_EMAIL");
   }
 
-  const from = process.env.CONTACT_SENDER_EMAIL ?? "noreply@jlsuvery.tw";
+  const configuredFrom = process.env.CONTACT_SENDER_EMAIL ?? "";
   const textBody = buildMailText(payload);
   const mailSubject = `[JLSUVERY 聯絡表單] ${payload.subject}`;
   const smtpHost = process.env.SMTP_HOST;
@@ -39,6 +39,7 @@ export async function sendContactMail(payload: ContactMailPayload): Promise<void
   const smtpPass = process.env.SMTP_PASS;
 
   if (smtpHost && smtpUser && smtpPass) {
+    const from = configuredFrom || smtpUser;
     const transporter = nodemailer.createTransport({
       host: smtpHost,
       port: smtpPort,
@@ -59,6 +60,7 @@ export async function sendContactMail(payload: ContactMailPayload): Promise<void
   if (!resendApiKey) {
     throw new Error("缺少 SMTP 設定與 RESEND_API_KEY");
   }
+  const from = configuredFrom || "noreply@jlsuvery.tw";
   const resend = new Resend(resendApiKey);
   await resend.emails.send({
     from,

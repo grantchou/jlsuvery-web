@@ -73,10 +73,19 @@ export async function POST(request: Request) {
       },
     });
 
+    let mailSent = true;
     try {
       await sendContactMail(parsed.data);
     } catch (mailError) {
+      mailSent = false;
       console.error("寄信失敗", mailError);
+    }
+
+    if (!mailSent) {
+      return NextResponse.json(
+        { message: "已收到您的需求，但通知信寄送失敗，請稍後再試或改用電話聯繫。" },
+        { status: 502 },
+      );
     }
 
     return NextResponse.json({ message: "已收到您的需求，我們會儘快與您聯繫。" });
