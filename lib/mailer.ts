@@ -102,10 +102,12 @@ export async function sendContactMail(payload: ContactMailPayload): Promise<void
   const smtpPass = stripEnvQuotes(process.env.SMTP_PASS ?? "");
 
   if (smtpHost && smtpUser && smtpPass) {
+    const isGmail = smtpHost.includes("gmail.com");
     const transporter = nodemailer.createTransport({
       host: smtpHost,
       port: smtpPort,
       secure: smtpPort === 465,
+      requireTLS: isGmail && smtpPort === 587,
       auth: { user: smtpUser, pass: smtpPass },
     });
     await transporter.sendMail({
