@@ -60,13 +60,19 @@ export async function sendContactMail(payload: ContactMailPayload): Promise<void
   if (!resendApiKey) {
     throw new Error("缺少 SMTP 設定與 RESEND_API_KEY");
   }
-  const from = configuredFrom || "noreply@jlsuvery.tw";
+  const from = configuredFrom || "JLSUVERY <onboarding@resend.dev>";
   const resend = new Resend(resendApiKey);
-  await resend.emails.send({
+  const { data, error } = await resend.emails.send({
     from,
     to,
     subject: mailSubject,
     text: textBody,
     replyTo: payload.email,
   });
+  if (error) {
+    throw new Error(`Resend 寄信失敗：${error.message}`);
+  }
+  if (!data?.id) {
+    throw new Error("Resend 寄信失敗：未取得郵件 ID");
+  }
 }
